@@ -4,7 +4,7 @@ module.exports = {
   Photo: {
     id: parent => parent.id || parent._id,
     url: parent => `https://site.com/img/${parent._id}.png`,
-    postedBy: (parent, __, { db }) => db.collection('users').findOne({ gitHubLogin: parent.userID }),
+    postedBy: (parent, __, { db }) => db.collection('users').findOne({ githubLogin: parent.userID }),
     taggedUsers: ({ id }) => tags.filter(t => t.photoId === id).map(t => t.userId).map(id => users.find(u => u.gitHubLogin === id)),
   },
   User: {
