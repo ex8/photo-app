@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { ApolloServer } = require('apollo-server-express');
 const express = require('express');
 const { MongoClient } = require('mongodb');
@@ -9,7 +10,7 @@ async function start() {
   const app = express();
   
   const client = await MongoClient.connect(
-    'mongodb://127.0.0.1:27017/photo-share', {
+    process.env.MONGODB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     },
@@ -19,9 +20,14 @@ async function start() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: {
-      db,
-    }
+    context: async ({ req }) => {
+      const githubToken = req.headers.authorization;
+      const user = await db.collection('users').findOne({ githubToken });
+      return {
+        db,
+        user,
+      };
+    },
   });
   server.applyMiddleware({ app });
 

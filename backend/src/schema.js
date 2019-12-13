@@ -8,10 +8,12 @@ const typeDefs = gql`
     allPhotos: [Photo!]!
     totalUsers: Int!
     allUsers: [User!]!
+    me: User
   }
   
   type Mutation {
     postPhoto(input: PostPhotoInput!): Photo!
+    githubAuth(code: String!): AuthPayload!
   }
 
   enum PhotoCategory {
@@ -34,11 +36,16 @@ const typeDefs = gql`
   }
 
   type User {
-    gitHubLogin: ID!
+    githubLogin: ID!
     name: String
     avatar: String
     postedPhotos: [Photo!]! 
     inPhotos: [Photo!]!
+  }
+
+  type AuthPayload {
+    token: String!
+    user: User!
   }
 
   input PostPhotoInput {
